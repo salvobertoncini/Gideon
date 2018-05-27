@@ -6,9 +6,9 @@ import datetime
 import random
 
 # personal import
-import genetic_tools
-import access_control_scheme_reconfig
-import access_control_scheme_design
+#import genetic_tools
+#import access_control_scheme_reconfig
+#import access_control_scheme_design
 
 
 def open_file(path):
@@ -116,11 +116,11 @@ def mutation(population, mutation_percentage):
 
 
 if __name__ == '__main__':
-	"""
+	
 	#managing dataset
 	t0 = time.time()
 
-	resources_dataset_name = 'fire1'
+	resources_dataset_name = 'domino'
 	writeLog("build_dataset "+resources_dataset_name)
 	resources_dataset, resources_Npop = build_dataset(resources_dataset_name, 'resource', 'role')
 
@@ -136,12 +136,12 @@ if __name__ == '__main__':
 
 	t1 = time.time()
 	print "time elapsed: "+str(round(t1-t0, 3))+" seconds"
-	"""
+	
 
 	#create random population
 	t0 = time.time()
 
-	random_population = create_population(50)
+	random_population = create_population(users_Npop if users_Npop > resources_Npop else resources_Npop)
 	
 	#crossover
 	#mutation
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 	#fitness function
 
 	#print random_population
-	#print mutated_population
+	print mutated_population
 
 	t1 = time.time()
 	print "time elapsed: "+str(round(t1-t0, 3))+" seconds"
