@@ -98,13 +98,14 @@ def f_first(x):
 	lenght = len(x)
 	return x[0:lenght]
 
+
 def f_second(x):
 	lenght = len(x)
 	return x[lenght:len(x)]
 
 
 def crossover(population, Pcros):
-	x_population = population
+	x_population = []
 	Npop = len(population)
 	Num_Op = Npop * Pcros
 
@@ -143,15 +144,47 @@ def mutation(population, mutation_percentage):
 	return x_population
 
 
+def selection(population, crossovered_population, mutated_population):
+	population = remove_duplication(population)
+	crossovered_population = remove_duplication(crossovered_population)
+	mutated_population = remove_duplication(mutated_population)
+
+	Npop = len(population)
+	population.extend(crossovered_population)
+	population.extend(mutated_population)
+
+	population = remove_duplication(population)
+	i_max = len(population)
+
+	#fitness function
+	#population = Sort(population, F)
+
+	i = Npop
+
+	print "i: "+str(i)+", i_max: "+str(i_max)
+
+	while i < i_max:
+		x = population[i]
+		population.remove(x)
+		i += 1
+		i_max -= 1
+
+	return population
+
+
+def remove_duplication(population):
+	return list(set(population))
+
+
 if __name__ == '__main__':
 	
 	#managing dataset
 	t0 = time.time()
 
-	resources_dataset_name = 'domino'
+	resources_dataset_name = 'fire1'
 	writeLog("build_dataset "+resources_dataset_name)
 	resources_dataset, resources_Npop = build_dataset(resources_dataset_name, 'resource', 'role')
-
+	
 	users_dataset_name = 'fire2'
 	writeLog("build_dataset "+ users_dataset_name)
 	users_dataset, users_Npop = build_dataset(users_dataset_name, 'user',  'role')
@@ -172,7 +205,9 @@ if __name__ == '__main__':
 	Pcros = 15
 	Pmut = 10
 
-	random_population = create_population(users_Npop if users_Npop > resources_Npop else resources_Npop)
+	Npop = users_Npop if users_Npop > resources_Npop else resources_Npop
+
+	random_population = create_population(Npop)
 	
 	# while population is not fine, currently used a i counter just for placeholder
 	i=0
@@ -180,13 +215,14 @@ if __name__ == '__main__':
 		#crossover
 		crossovered_population = crossover(random_population, Pcros)
 		#mutation
-		mutated_population = mutation(crossovered_population, Pmut)
+		mutated_population = mutation(random_population, Pmut)
 		#selection
-		#fitness function
+		after_selection_population = selection(random_population, crossovered_population, mutated_population)
+		
 		i+=1
 
 	#print random_population
-	print mutated_population
+	#print sorted(after_selection_population)
 
 	t1 = time.time()
 	print "time elapsed: "+str(round(t1-t0, 3))+" seconds"
