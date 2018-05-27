@@ -143,11 +143,15 @@ if __name__ == '__main__':
 
 	random_population = create_population(users_Npop if users_Npop > resources_Npop else resources_Npop)
 	
-	#crossover
-	#mutation
-	mutated_population = mutation(random_population, 10)
-	#selection
-	#fitness function
+	# while population is not fine, currently used a i counter just for placeholder
+	i=0
+	while i<2:
+		#crossover
+		#mutation
+		mutated_population = mutation(random_population, 10)
+		#selection
+		#fitness function
+		i+=1
 
 	#print random_population
 	print mutated_population
