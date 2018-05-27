@@ -1,73 +1,107 @@
-import operator
+
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
 import random
 
+class Individual(object):
 
-# Create population
-def generateAWord (length):
-	i = 0
-	result = ""
-	while i < length:
-		letter = chr(97 + int(26 * random.random()))
-		result += letter
-		i +=1
-	return result
+    def __init__(self, numbers=None, mutate_prob=0.01):
+        if numbers is None:
+            self.numbers = np.random.randint(101, size=10)
+        else:
+            self.numbers = numbers
+            # Mutate
+            if mutate_prob > np.random.rand():
+                mutate_index = np.random.randint(len(self.numbers) - 1)
+                self.numbers[mutate_index] = np.random.randint(101)
 
-def generateFirstPopulation(sizePopulation, password):
-	population = []
-	i = 0
-	while i < sizePopulation:
-		population.append(generateAWord(len(password)))
-		i+=1
-	return population
+    def fitness(self):
+        """
+            Returns fitness of individual
+            Fitness is the difference between
+        """
+        target_sum = 900
+        return abs(target_sum - np.sum(self.numbers))
 
+class Population(object):
 
-# Increase population
-def computePerfPopulation(population, password):
-	populationPerf = {}
-	for individual in population:
-		populationPerf[individual] = fitness(password, individual)
-	return sorted(populationPerf.items(), key = operator.itemgetter(1), reverse=True)
+    def __init__(self, pop_size=10, mutate_prob=0.01, retain=0.2, random_retain=0.03):
+        """
+            Args
+                pop_size: size of population
+                fitness_goal: goal that population will be graded against
+        """
+        self.pop_size = pop_size
+        self.mutate_prob = mutate_prob
+        self.retain = retain
+        self.random_retain = random_retain
+        self.fitness_history = []
+        self.parents = []
+        self.done = False
 
+        # Create individuals
+        self.individuals = []
+        for x in range(pop_size):
+            self.individuals.append(Individual(numbers=None,mutate_prob=self.mutate_prob))
 
-def selectFromPopulation(populationSorted, best_sample, lucky_few):
-	nextGeneration = []
-	for i in range(best_sample):
-		nextGeneration.append(populationSorted[i][0])
-	for i in range(lucky_few):
-		nextGeneration.append(random.choice(populationSorted)[0])
-	random.shuffle(nextGeneration)
-	return nextGeneration
+    def grade(self, generation=None):
+        """
+            Grade the generation by getting the average fitness of its individuals
+        """
+        fitness_sum = 0
+        for x in self.individuals:
+            fitness_sum += x.fitness()
 
+        pop_fitness = fitness_sum / self.pop_size
+        self.fitness_history.append(pop_fitness)
 
-def createChild(individual1, individual2):
-	child = ""
-	for i in range(len(individual1)):
-		if (int(100 * random.random()) < 50):
-			child += individual1[i]
-		else:
-			child += individual2[i]
-	return child
+        # Set Done flag if we hit target
+        if int(round(pop_fitness)) == 0:
+            self.done = True
 
-def createChildren(breeders, number_of_child):
-	nextPopulation = []
-	for i in range(len(breeders)/2):
-		for j in range(number_of_child):
-			nextPopulation.append(createChild(breeders[i], breeders[len(breeders) -1 -i]))
-	return nextPopulation
+        if generation is not None:
+            if generation % 5 == 0:
+                print("Episode",generation,"Population fitness:", pop_fitness)
 
+    def select_parents(self):
+        """
+            Select the fittest individuals to be the parents of next generation (lower fitness it better in this case)
+            Also select a some random non-fittest individuals to help get us out of local maximums
+        """
+        # Sort individuals by fitness (we use reversed because in this case lower fintess is better)
+        self.individuals = list(reversed(sorted(self.individuals, key=lambda x: x.fitness(), reverse=True)))
+        # Keep the fittest as parents for next gen
+        retain_length = self.retain * len(self.individuals)
+        self.parents = self.individuals[:int(retain_length)]
 
-# Mutation
-def mutateWord(word):
-	index_modification = int(random.random() * len(word))
-	if (index_modification == 0):
-		word = chr(97 + int(26 * random.random())) + word[1:]
-	else:
-		word = word[:index_modification] + chr(97 + int(26 * random.random())) + word[index_modification+1:]
-	return word
+        # Randomly select some from unfittest and add to parents array
+        unfittest = self.individuals[int(retain_length):]
+        for unfit in unfittest:
+            if self.random_retain > np.random.rand():
+                self.parents.append(unfit)
 
-	
-def mutatePopulation(population, chance_of_mutation):
-	for i in range(len(population)):
-		if random.random() * 100 < chance_of_mutation:
-			population[i] = mutateWord(population[i])
-	return population
+    def breed(self):
+        """
+            Crossover the parents to generate children and new generation of individuals
+        """
+        target_children_size = self.pop_size - len(self.parents)
+        children = []
+        if len(self.parents) > 0:
+            while len(children) < target_children_size:
+                father = random.choice(self.parents)
+                mother = random.choice(self.parents)
+                if father != mother:
+                    child_numbers = [ random.choice(pixel_pair) for pixel_pair in zip(father.numbers, mother.numbers)]
+                    child = Individual(child_numbers)
+                    children.append(child)
+            self.individuals = self.parents + children
+
+    def evolve(self):
+        # 1. Select fittest
+        self.select_parents()
+        # 2. Create children and new generation
+        self.breed()
+        # 3. Reset parents and children
+        self.parents = []
+        self.children = []
