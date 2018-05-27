@@ -94,6 +94,34 @@ def create_population(pop_size):
 	return population
 
 
+def f_first(x):
+	lenght = len(x)
+	return x[0:lenght]
+
+def f_second(x):
+	lenght = len(x)
+	return x[lenght:len(x)]
+
+
+def crossover(population, Pcros):
+	x_population = population
+	Npop = len(population)
+	Num_Op = Npop * Pcros
+
+	for i in range(Num_Op):
+
+		if Pcros > random.randint(0, 100):
+			first = random.choice(population)
+			second = random.choice(population)
+
+			x = f_first(first)
+			y = f_second(second)
+			x_population.append(x+y)
+
+	return x_population
+
+
+
 def mutation(population, mutation_percentage):
 	x_population = []
 	for chromosome in population:
@@ -141,14 +169,18 @@ if __name__ == '__main__':
 	#create random population
 	t0 = time.time()
 
+	Pcros = 15
+	Pmut = 10
+
 	random_population = create_population(users_Npop if users_Npop > resources_Npop else resources_Npop)
 	
 	# while population is not fine, currently used a i counter just for placeholder
 	i=0
 	while i<2:
 		#crossover
+		crossovered_population = crossover(random_population, Pcros)
 		#mutation
-		mutated_population = mutation(random_population, 10)
+		mutated_population = mutation(crossovered_population, Pmut)
 		#selection
 		#fitness function
 		i+=1
