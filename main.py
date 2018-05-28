@@ -91,7 +91,7 @@ def create_population(pop_size):
 		chromosome = str(dec_to_bin(random.randint(0, 512)))
 		population.append(chromosome)
 
-	return population
+	return chromosomes_normalization(population)
 
 
 def f_first(x):
@@ -117,10 +117,23 @@ def crossover(population, Pcros):
 
 			x = f_first(first)
 			y = f_second(second)
-			x_population.append(x+y)
+			z = x+y
+			x_population.append(z)
+
+	return chromosomes_normalization(x_population)
+
+
+def chromosomes_normalization(population):
+	x_population = []
+	max_length,longest_element = max([(len(x),x) for x in population])
+
+	for chromosome in population:
+		while len(chromosome) < max_length:
+			chromosome = ''.join(('0', chromosome))
+
+		x_population.append(''.join(chromosome)) 
 
 	return x_population
-
 
 
 def mutation(population, mutation_percentage):
@@ -146,8 +159,6 @@ def mutation(population, mutation_percentage):
 
 def selection(population, crossovered_population, mutated_population):
 	population = remove_duplication(population)
-	crossovered_population = remove_duplication(crossovered_population)
-	mutated_population = remove_duplication(mutated_population)
 
 	Npop = len(population)
 	population.extend(crossovered_population)
@@ -161,7 +172,7 @@ def selection(population, crossovered_population, mutated_population):
 
 	i = Npop
 
-	print "i: "+str(i)+", i_max: "+str(i_max)
+	#print "i: "+str(i)+", i_max: "+str(i_max)
 
 	while i < i_max:
 		x = population[i]
@@ -176,11 +187,27 @@ def remove_duplication(population):
 	return list(set(population))
 
 
+def access_control_scheme_design(population, Tmax, Pcros, Pmut):
+	after_selection_population = []
+
+	# iteration from 0 to Tmax
+	for x in range(0, Tmax):
+		print "stage "+str(x+1)
+		#crossover
+		crossovered_population = crossover(population, Pcros)
+		#mutation
+		mutated_population = mutation(population, Pmut)
+		#selection
+		after_selection_population = selection(population, crossovered_population, mutated_population)
+
+	return remove_duplication(after_selection_population)
+
+
 if __name__ == '__main__':
 	
 	#managing dataset
 	t0 = time.time()
-
+	
 	resources_dataset_name = 'fire1'
 	writeLog("build_dataset "+resources_dataset_name)
 	resources_dataset, resources_Npop = build_dataset(resources_dataset_name, 'resource', 'role')
@@ -197,31 +224,26 @@ if __name__ == '__main__':
 
 	t1 = time.time()
 	print "time elapsed: "+str(round(t1-t0, 3))+" seconds"
-	
 
 	#create random population
 	t0 = time.time()
 
+	#maximal number of iterations
+	Tmax = 10
+	#probability of crossover
 	Pcros = 15
+	#probability of mutation
 	Pmut = 10
 
+	#Number of individuals in population
+	#Npop = 150
 	Npop = users_Npop if users_Npop > resources_Npop else resources_Npop
 
 	random_population = create_population(Npop)
-	
-	# while population is not fine, currently used a i counter just for placeholder
-	i=0
-	while i<2:
-		#crossover
-		crossovered_population = crossover(random_population, Pcros)
-		#mutation
-		mutated_population = mutation(random_population, Pmut)
-		#selection
-		after_selection_population = selection(random_population, crossovered_population, mutated_population)
-		
-		i+=1
 
-	#print random_population
+	population = access_control_scheme_design(random_population, Tmax, Pcros, Pmut)
+
+	print sorted(population)
 	#print sorted(after_selection_population)
 
 	t1 = time.time()
