@@ -241,7 +241,9 @@ if __name__ == '__main__':
 
 	random_population = create_population(Npop)
 
+	#access_control_scheme_design(Npop, Tmax, Criteria, Pcros, Pmut)
 	population = access_control_scheme_design(random_population, Tmax, Pcros, Pmut)
+	#access_control_scheme_reconfig(Npop, Tmax, Criteria, Pcros, Pmut, Config_Cur, Values_New)
 
 	print sorted(population)
 	#print sorted(after_selection_population)
@@ -249,6 +251,3 @@ if __name__ == '__main__':
 	t1 = time.time()
 	print "time elapsed: "+str(round(t1-t0, 3))+" seconds"
 
-
-	#access_control_scheme_design(Npop, Tmax, Criteria, Pcros, Pmut)
-	#access_control_scheme_reconfig(Npop, Tmax, Criteria, Pcros, Pmut, Config_Cur, Values_New)
