@@ -12,6 +12,7 @@ import random
 
 
 def open_file(path):
+	writeLog("file opened: "+path)
 	file = open(''+path, 'r')
 	file_to_read = file.read()
 	file.close()
@@ -26,11 +27,13 @@ def writeLog(message):
 
 
 def print_dataset(dataset_name, Npop, dataset):
+	writeLog("print_dataset")
 	print "dataset: "+dataset_name+", population: "+str(Npop)
 	#print json.dumps(dataset, indent=2)
 
 
-def fetch_trivial_dataset(trivial_dataset, tag_id, tag_value):	
+def fetch_trivial_dataset(trivial_dataset, tag_id, tag_value):
+	writeLog("fetch_trivial_dataset")	
 	array_replace = trivial_dataset.split()
 	array_json = []
 	i=0
@@ -45,6 +48,7 @@ def fetch_trivial_dataset(trivial_dataset, tag_id, tag_value):
 
 
 def fetch_raw_dataset(array_json, tag_id, tag_value):
+	writeLog("fetch_raw_dataset")
 	occurrence_json = []
 	population_counter = 0
 
@@ -65,6 +69,7 @@ def fetch_raw_dataset(array_json, tag_id, tag_value):
 
 
 def build_dataset(dataset_name, tag_id, tag_value):
+	writeLog("build_dataset")
 	trivial_dataset = open_file('../datasets/'+dataset_name+'.txt')
 	raw_dataset = fetch_trivial_dataset(trivial_dataset, tag_id, tag_value)
 	dataset, Npop = fetch_raw_dataset(raw_dataset, tag_id, tag_value)
@@ -77,6 +82,7 @@ def dec_to_bin(x):
 
 
 def chromosomes_convertion(dataset, tag_id):
+	writeLog("chromosomes_convertion")
 	population = []
 
 	for x in dataset:
@@ -86,6 +92,7 @@ def chromosomes_convertion(dataset, tag_id):
 
 
 def create_population(pop_size):
+	writeLog("create_population")
 	population = []
 	for x in range(pop_size):
 		chromosome = str(dec_to_bin(random.randint(0, 512)))
@@ -95,16 +102,19 @@ def create_population(pop_size):
 
 
 def f_first(x):
+	writeLog("f_first")
 	lenght = len(x)
 	return x[0:lenght]
 
 
 def f_second(x):
+	writeLog("f_second")
 	lenght = len(x)
 	return x[lenght:len(x)]
 
 
 def crossover(population, Pcros):
+	writeLog("crossover")
 	x_population = []
 	Npop = len(population)
 	Num_Op = Npop * Pcros
@@ -124,6 +134,7 @@ def crossover(population, Pcros):
 
 
 def chromosomes_normalization(population):
+	writeLog("chromosomes_normalization")
 	x_population = []
 	max_length,longest_element = max([(len(x),x) for x in population])
 
@@ -137,6 +148,7 @@ def chromosomes_normalization(population):
 
 
 def mutation(population, mutation_percentage):
+	writeLog("mutation")
 	x_population = []
 	for chromosome in population:
 		alea = 0
@@ -158,13 +170,14 @@ def mutation(population, mutation_percentage):
 
 
 def selection(population, crossovered_population, mutated_population):
-	population = remove_duplication(population)
+	writeLog("selection")
+	#population = remove_duplication(population)
 
 	Npop = len(population)
 	population.extend(crossovered_population)
 	population.extend(mutated_population)
 
-	population = remove_duplication(population)
+	#population = remove_duplication(population)
 	i_max = len(population)
 
 	#fitness function
@@ -184,10 +197,12 @@ def selection(population, crossovered_population, mutated_population):
 
 
 def remove_duplication(population):
+	writeLog("remove_duplication")
 	return list(set(population))
 
 
 def access_control_scheme_design(population, Tmax, Pcros, Pmut):
+	writeLog("access_control_scheme_design")
 	after_selection_population = []
 
 	# iteration from 0 to Tmax
@@ -200,18 +215,18 @@ def access_control_scheme_design(population, Tmax, Pcros, Pmut):
 		#selection
 		after_selection_population = selection(population, crossovered_population, mutated_population)
 
-	return remove_duplication(after_selection_population)
+	#return remove_duplication(after_selection_population)
+	return after_selection_population
 
 
 def load_dataset_process(dataset_name, tag_id, tag_value):
-	writeLog("build_dataset "+dataset_name)
+	writeLog("load_dataset_process "+dataset_name)
 	dataset, Npop = build_dataset(dataset_name, ''+tag_id, ''+tag_value)
 
 	return dataset, Npop
 
 
 if __name__ == '__main__':
-	
 	#managing dataset
 	t0 = time.time()
 	
@@ -234,7 +249,7 @@ if __name__ == '__main__':
 	t0 = time.time()
 
 	#maximal number of iterations
-	Tmax = 10
+	Tmax = 3
 	#probability of crossover
 	Pcros = 15
 	#probability of mutation
@@ -242,16 +257,17 @@ if __name__ == '__main__':
 
 	#Number of individuals in population
 	#Npop = 150
-	Npop = users_Npop if users_Npop > resources_Npop else resources_Npop
+	Npop = len(population1) if len(population1) > len(population2) else len(population2)
 
-	random_population = create_population(Npop)
+	population = population1 if len(population1) > len(population2) else population2
+	#population = create_population(Npop)
 
+	population = access_control_scheme_design(population, Tmax, Pcros, Pmut)
 	#access_control_scheme_design(Npop, Tmax, Criteria, Pcros, Pmut)
-	population = access_control_scheme_design(random_population, Tmax, Pcros, Pmut)
 	#access_control_scheme_reconfig(Npop, Tmax, Criteria, Pcros, Pmut, Config_Cur, Values_New)
 
 	print sorted(population)
-	#print sorted(after_selection_population)
+	print "population: "+str(len(population))
 
 	t1 = time.time()
 	print "time elapsed: "+str(round(t1-t0, 3))+" seconds"
