@@ -203,18 +203,23 @@ def access_control_scheme_design(population, Tmax, Pcros, Pmut):
 	return remove_duplication(after_selection_population)
 
 
+def load_dataset_process(dataset_name, tag_id, tag_value):
+	writeLog("build_dataset "+dataset_name)
+	dataset, Npop = build_dataset(dataset_name, ''+tag_id, ''+tag_value)
+
+	return dataset, Npop
+
+
 if __name__ == '__main__':
 	
 	#managing dataset
 	t0 = time.time()
 	
-	resources_dataset_name = 'fire1'
-	writeLog("build_dataset "+resources_dataset_name)
-	resources_dataset, resources_Npop = build_dataset(resources_dataset_name, 'resource', 'role')
+	resources_dataset_name = 'domino'
+	resources_dataset, resources_Npop = load_dataset_process(resources_dataset_name, 'resource', 'role')
 	
-	users_dataset_name = 'fire2'
-	writeLog("build_dataset "+ users_dataset_name)
-	users_dataset, users_Npop = build_dataset(users_dataset_name, 'user',  'role')
+	users_dataset_name = 'fire1'
+	users_dataset, users_Npop = load_dataset_process(users_dataset_name, 'user',  'role')
 
 	print_dataset(resources_dataset_name, resources_Npop, resources_dataset)
 	print_dataset(users_dataset_name, users_Npop, users_dataset)
