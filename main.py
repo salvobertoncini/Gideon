@@ -68,10 +68,33 @@ def fetch_raw_dataset(array_json, tag_id, tag_value):
 	return occurrence_json, population_counter
 
 
+def mapping_dataset_x_y(dataset, tag_id, tag_value):
+	writeLog("mapping_roles_permissions")
+	mapped_json = []
+
+	for x in dataset:
+		found = 0
+		for y in mapped_json:
+			if x[""+tag_id] == y[""+tag_id]:
+				found = 1
+				y[""+tag_value].append(x[""+tag_value])
+		if found == 0:
+			list_tmp = []
+			list_tmp.append(x[""+tag_value])
+			mapped_json.append({""+tag_id: x[""+tag_id], ""+tag_value: list_tmp})
+
+	mapped_json.sort(key=operator.itemgetter(''+tag_id))
+	
+	return mapped_json
+
 def build_dataset(dataset_name, tag_id, tag_value):
 	writeLog("build_dataset")
 	trivial_dataset = open_file('../datasets/'+dataset_name+'.txt')
 	raw_dataset = fetch_trivial_dataset(trivial_dataset, tag_id, tag_value)
+
+	mapped_json = mapping_dataset_x_y(raw_dataset, tag_id, tag_value)
+	#print mapped_json
+
 	dataset, Npop = fetch_raw_dataset(raw_dataset, tag_id, tag_value)
 
 	return dataset, Npop
@@ -113,6 +136,20 @@ def f_second(x):
 	return x[lenght:len(x)]
 
 
+def chromosomes_normalization(population):
+	writeLog("chromosomes_normalization")
+	x_population = []
+	max_length,longest_element = max([(len(x),x) for x in population])
+
+	for chromosome in population:
+		while len(chromosome) < max_length:
+			chromosome = ''.join(('0', chromosome))
+
+		x_population.append(''.join(chromosome)) 
+
+	return x_population
+
+
 def crossover(population, Pcros):
 	writeLog("crossover")
 	x_population = []
@@ -131,20 +168,6 @@ def crossover(population, Pcros):
 			x_population.append(z)
 
 	return chromosomes_normalization(x_population)
-
-
-def chromosomes_normalization(population):
-	writeLog("chromosomes_normalization")
-	x_population = []
-	max_length,longest_element = max([(len(x),x) for x in population])
-
-	for chromosome in population:
-		while len(chromosome) < max_length:
-			chromosome = ''.join(('0', chromosome))
-
-		x_population.append(''.join(chromosome)) 
-
-	return x_population
 
 
 def mutation(population, mutation_percentage):
@@ -222,25 +245,21 @@ def access_control_scheme_design(population, Tmax, Pcros, Pmut):
 def load_dataset_process(dataset_name, tag_id, tag_value):
 	writeLog("load_dataset_process "+dataset_name)
 	dataset, Npop = build_dataset(dataset_name, ''+tag_id, ''+tag_value)
+	#print_dataset(dataset_name, Npop, dataset)
+	population = chromosomes_convertion(dataset, ''+tag_id)
 
-	return dataset, Npop
+	return population
 
 
 if __name__ == '__main__':
 	#managing dataset
 	t0 = time.time()
 	
-	resources_dataset_name = 'domino'
-	resources_dataset, resources_Npop = load_dataset_process(resources_dataset_name, 'resource', 'role')
-	
-	users_dataset_name = 'fire1'
-	users_dataset, users_Npop = load_dataset_process(users_dataset_name, 'user',  'role')
+	dataset_name = 'domino'
+	population1 = load_dataset_process(dataset_name, 'resource', 'role')
 
-	print_dataset(resources_dataset_name, resources_Npop, resources_dataset)
-	print_dataset(users_dataset_name, users_Npop, users_dataset)
-	
-	population1 = chromosomes_convertion(resources_dataset, 'resource')
-	population2 = chromosomes_convertion(users_dataset, 'user')
+	dataset_name = 'fire1'
+	population2 = load_dataset_process(dataset_name, 'user', 'role')
 
 	t1 = time.time()
 	print "time elapsed: "+str(round(t1-t0, 3))+" seconds"
