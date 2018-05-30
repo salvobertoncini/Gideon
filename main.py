@@ -12,9 +12,7 @@ import tools
 
 if __name__ == '__main__':
 	#managing dataset
-	t0 = time.time()
-
-	evaluator.start_timer()
+	t0 = evaluator.start_timer()
 	
 	dataset_name = 'domino'
 	population1 = generator.load_dataset_process(dataset_name, 'resource', 'role')
@@ -22,13 +20,10 @@ if __name__ == '__main__':
 	dataset_name = 'fire1'
 	population2 = generator.load_dataset_process(dataset_name, 'user', 'role')
 
-	t1 = time.time()
-	print "time elapsed: "+str(round(t1-t0, 3))+" seconds"
+	evaluator.end_timer(t0)
 
 	#create random population
-	t0 = time.time()
-
-	evaluator.end_timer()
+	t1 = evaluator.start_timer()
 
 	#maximal number of iterations
 	Tmax = 3
@@ -50,7 +45,6 @@ if __name__ == '__main__':
 
 	print sorted(population)
 	print "population: "+str(len(population))
-
-	t1 = time.time()
-	print "time elapsed: "+str(round(t1-t0, 3))+" seconds"
+	
+	evaluator.end_timer(t1)
 
