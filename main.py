@@ -15,10 +15,7 @@ if __name__ == '__main__':
 	t0 = evaluator.start_timer()
 	
 	dataset_name = 'domino'
-	population1 = generator.load_dataset_process(dataset_name, 'resource', 'role')
-
-	dataset_name = 'fire1'
-	population2 = generator.load_dataset_process(dataset_name, 'user', 'role')
+	dataset = generator.load_dataset_process(dataset_name, 'user', 'permission')
 
 	evaluator.end_timer(t0)
 
@@ -34,10 +31,11 @@ if __name__ == '__main__':
 
 	#Number of individuals in population
 	#Npop = 150
-	Npop = len(population1) if len(population1) > len(population2) else len(population2)
+	Npop = len(dataset)
+	#Npop = len(population1) if len(population1) > len(population2) else len(population2)
 
-	population = population1 if len(population1) > len(population2) else population2
-	#population = create_population(Npop)
+	#population = population1 if len(population1) > len(population2) else population2
+	population = generator.create_population(Npop, 512)
 
 	population = genetic_algorithm.access_control_scheme_design(population, Tmax, Pcros, Pmut)
 	#access_control_scheme_design(Npop, Tmax, Criteria, Pcros, Pmut)

@@ -27,3 +27,17 @@ def writeLog(message):
 	log.write(str(datetime.datetime.now()) +" - "+message + "\n")
 	log.close()
 
+
+def chromosomes_normalization(population):
+	writeLog("chromosomes_normalization")
+	x_population = []
+	max_length,longest_element = max([(len(x),x) for x in population])
+
+	for chromosome in population:
+		while len(chromosome) < max_length:
+			chromosome = ''.join(('0', chromosome))
+
+		x_population.append(''.join(chromosome)) 
+
+	return x_population
+

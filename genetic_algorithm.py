@@ -15,20 +15,6 @@ def f_second(x):
 	return x[lenght:len(x)]
 
 
-def chromosomes_normalization(population):
-	tools.writeLog("chromosomes_normalization")
-	x_population = []
-	max_length,longest_element = max([(len(x),x) for x in population])
-
-	for chromosome in population:
-		while len(chromosome) < max_length:
-			chromosome = ''.join(('0', chromosome))
-
-		x_population.append(''.join(chromosome)) 
-
-	return x_population
-
-
 def crossover(population, Pcros):
 	tools.writeLog("crossover")
 	x_population = []
@@ -46,7 +32,7 @@ def crossover(population, Pcros):
 			z = x+y
 			x_population.append(z)
 
-	return chromosomes_normalization(x_population)
+	return tools.chromosomes_normalization(x_population)
 
 
 def mutation(population, mutation_percentage):

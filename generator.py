@@ -1,6 +1,7 @@
 #Generator
-import tools
 import operator
+import random
+import tools
 
 
 def build_dataset(dataset_name, tag_id, tag_value):
@@ -26,14 +27,14 @@ def chromosomes_convertion(dataset, tag_id):
 	return population
 
 
-def create_population(pop_size):
+def create_population(pop_size, max_limit):
 	tools.writeLog("create_population")
 	population = []
 	for x in range(pop_size):
-		chromosome = str(dec_to_bin(random.randint(0, 512)))
+		chromosome = str(dec_to_bin(random.randint(0, max_limit)))
 		population.append(chromosome)
 
-	return chromosomes_normalization(population)
+	return tools.chromosomes_normalization(population)
 
 
 def dec_to_bin(x):
