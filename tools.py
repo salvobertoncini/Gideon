@@ -1,5 +1,6 @@
 #Tools
 import datetime
+import json
 
 
 def open_file(path):
@@ -41,3 +42,7 @@ def chromosomes_normalization(population):
 
 	return x_population
 
+
+def create_matrix(w, h):
+	Matrix = [[0 for x in range(w)] for y in range(h)]
+	return Matrix

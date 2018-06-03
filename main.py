@@ -14,8 +14,11 @@ if __name__ == '__main__':
 	#managing dataset
 	t0 = evaluator.start_timer()
 	
-	dataset_name = 'domino'
-	dataset = generator.load_dataset_process(dataset_name, 'user', 'permission')
+	dataset_name = 'fire1'
+	tag_id = 'user'
+	tag_value = 'permission'
+
+	dataset = generator.load_dataset_process(dataset_name, tag_id, tag_value)
 
 	evaluator.end_timer(t0)
 
@@ -23,7 +26,7 @@ if __name__ == '__main__':
 	t1 = evaluator.start_timer()
 
 	#maximal number of iterations
-	Tmax = 3
+	Tmax = 1
 	#probability of crossover
 	Pcros = 15
 	#probability of mutation
@@ -35,7 +38,7 @@ if __name__ == '__main__':
 	#Npop = len(population1) if len(population1) > len(population2) else len(population2)
 
 	#population = population1 if len(population1) > len(population2) else population2
-	population = generator.create_population(Npop, 512)
+	population = generator.create_population(dataset, tag_id, tag_value)
 
 	population = genetic_algorithm.access_control_scheme_design(population, Tmax, Pcros, Pmut)
 	#access_control_scheme_design(Npop, Tmax, Criteria, Pcros, Pmut)
