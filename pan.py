@@ -157,7 +157,6 @@ def mutation(population, Pmut):
 				tmp = Mutate(tmp, j)
 				Individual[0] = ''.join(tmp)
 
-
 		#Mutation chromosome Y of Individual
 		j_max_Y = Lenght_Chromosome(Individual, 2)
 		for j in range(0, j_max_Y):
@@ -176,8 +175,6 @@ def mutation(population, Pmut):
 def selection(population, Npop, Cross_desc, Mut_Indiv):
 	population.extend(Cross_desc)
 	population.extend(Mut_Indiv)
-
-	n_max = len(population)
 
 	#Deletion of the individuals with the worst values of the fitness function
 	population = sort_by_fitness_function(population)
