@@ -1,10 +1,5 @@
-#Tools
-import datetime
-import json
-
-
 def open_file(path):
-	writeLog("file opened: "+path)
+	#writeLog("file opened: "+path)
 	file = open(''+path, 'r')
 	file_to_read = file.read()
 	file.close()
@@ -12,37 +7,17 @@ def open_file(path):
 	return file_to_read
 
 
-def print_dataset(dataset_name, Npop, dataset):
-	writeLog("print_dataset")
-	print "dataset: "+dataset_name+", population: "+str(Npop)
-	#print json.dumps(dataset, indent=2)
+def from_txt_to_dataset(file_name, tag_id, tag_value):
+	raw_dataset = open_file(file_name)
 
+	array_replace = raw_dataset.split()
+	dataset = []
+	i=0
 
-def remove_duplication(population):
-	writeLog("remove_duplication")
-	return list(set(population))
+	while i < len(array_replace) - 1:
+		if array_replace[i] != ",":
+			dataset.append({""+tag_id: int(array_replace[i]), ""+tag_value: array_replace[i+1]})
+			
+			i+=2
 
-
-def writeLog(message):
-	log = open('log.txt', 'a')
-	log.write(str(datetime.datetime.now()) +" - "+message + "\n")
-	log.close()
-
-
-def chromosomes_normalization(population):
-	writeLog("chromosomes_normalization")
-	x_population = []
-	max_length,longest_element = max([(len(x),x) for x in population])
-
-	for chromosome in population:
-		while len(chromosome) < max_length:
-			chromosome = ''.join(('0', chromosome))
-
-		x_population.append(''.join(chromosome)) 
-
-	return x_population
-
-
-def create_matrix(w, h):
-	Matrix = [[0 for x in range(w)] for y in range(h)]
-	return Matrix
+	return dataset

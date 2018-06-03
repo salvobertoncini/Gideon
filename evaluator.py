@@ -1,4 +1,3 @@
-#Evaluator
 import time
 
 def start_timer():
