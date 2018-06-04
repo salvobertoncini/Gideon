@@ -24,11 +24,10 @@ if __name__ == '__main__':
 
 	dataset = tools.from_txt_to_dataset(file_name, tag_id, tag_value)
 	population = generator.create_population(dataset, Npop, tag_id, tag_value)
-	
-	matrix = generator.create_matrix(population)
 
 	config = genetic_algorithm.access_control_scheme_design(population, Npop, Tmax, Pcros, Pmut)
 
 	evaluator.end_timer(t0)
 
-	print matrix
+	#print matrix
+	#print config[0]

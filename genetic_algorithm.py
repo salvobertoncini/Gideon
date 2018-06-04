@@ -1,6 +1,8 @@
-import random
+import numpy
 
+import random
 import constraints
+import generator
 
 def access_control_scheme_design(population, Npop, Tmax, Pcros, Pmut):
 	for i in range(0, Tmax):
@@ -152,6 +154,50 @@ def Mutate(chromosome, j):
 
 
 def sort_by_fitness_function(population):
+
+	
+	#Ratio: w1<<w2
+	w1 = 10
+	w2 = 100
+
+	#k should be a small value
+	k = 1
+
+	A = generator.create_matrix(population)
+
+
+	#Fitness Function values
+	i = 0
+	j = 0
+	l = 0
+	v1 = []
+	v2 = []
+	result = 1
+
+	#convert X and Y in two matrices
+	for i in population:
+		v1.append(map(int, list(i[0])))
+		v2.append(map(int, list(i[1])))
+
+	#Fitness Function Formula (8)
+	while i < len(v1):
+		while j < len(v2):
+			summa = 0
+
+			while l < k:
+				x = int(v1[i][l]) & int(v2[l][j])
+				summa = summa | int(x)
+				l += 1
+
+			j += 1
+
+		result = result | numpy.abs(A[i][j] - summa)
+		
+		i+=1
+
+	F = w1*k + w2*result
+	print F
+
 	#sort by the X ascend
 	population.sort(key=lambda tup:tup[0])
 
