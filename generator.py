@@ -1,4 +1,5 @@
 import random
+import numpy
 
 def list_of_tag(dataset, tag):
 	list_tag = []
@@ -33,3 +34,18 @@ def create_population(dataset, Npop, tag_id, tag_value):
 		Population.append([X, Y])
 
 	return Population
+
+
+def create_matrix(Population):
+	v1 = []
+	v2 = []
+
+	for i in Population:
+		v1.append(map(int, list(i[0])))
+		v2.append(map(int, list(i[1])))
+
+	m1 = numpy.matrix(v1)
+	m2 = numpy.matrix(v2)
+
+	return numpy.matmul(m1.T, m2)
+	
