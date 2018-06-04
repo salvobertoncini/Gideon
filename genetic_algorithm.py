@@ -154,8 +154,6 @@ def Mutate(chromosome, j):
 
 
 def sort_by_fitness_function(population):
-
-	
 	#Ratio: w1<<w2
 	w1 = 10
 	w2 = 100
@@ -164,7 +162,6 @@ def sort_by_fitness_function(population):
 	k = 1
 
 	A = generator.create_matrix(population)
-
 
 	#Fitness Function values
 	i = 0
