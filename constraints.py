@@ -1,91 +1,86 @@
-def cardinality_constraint_of_role(population, N):
-	population_x = []
+#maximum number of roles to which an user can belong(e.g. 30)
+def cardinality_constraint_of_role(individual, max_n):
+	summa = 0
+	for gene in individual[0]:
+		semi_summa = 0
+		for allele in gene:
+			if allele == '1':
+				semi_summa += 1
+		if semi_summa > max_n:
+			return 1
+		summa += semi_summa
 
-	for individual in population:
-		#control of chromosome X
-		tmp = list(individual[0])
-		count = 0
-		for x in tmp:
-			if x == '1':
-				count +=1 
+	return summa
+	"""
 
-		if count < N:
-			individual[0] = ''.join(tmp)
-			population_x.append(individual)
-
-	return population_x
-
-
-def cardinality_constraint_of_permission(population, N):
-	population_x = []
-
-	for individual in population:
-		#control of chromosome X
-		tmp = list(individual[1])
-		count = 0
-		for x in tmp:
-			if x == '1':
-				count +=1 
-
-		if count < N:
-			individual[1] = ''.join(tmp)
-			population_x.append(individual)
-
-	return population_x
+	if all(gene.count('1') < max_n for gene in individual[0]):
+		a = sum(gene > 0 for gene in individual[0])
+		print a
+		return a
+	else:
+		return 1
+	"""
 
 
-def cardinality_constraint_of_user(population, N, i):
-	#input: population, max number of user with the role, index of role in the binary chromosome X
-	population_x = []
-	count = 0
-
-	for individual in population:
-		#control of chromosome X
-		tmp = list(individual[0])
-
-		if tmp[i] == '1':
-			count +=1 
-
-		if count < N:
-			individual[0] = ''.join(tmp)
-			population_x.append(individual)
-
-	return population_x, count
+#maximum number of roles to which a permission can belong(e.g. 30)
+def cardinality_constraint_of_permission(individual, max_n):
+	summa = 0
+	for gene in individual[1]:
+		semi_summa = 0
+		for allele in gene:
+			if allele == '1':
+				semi_summa += 1
+		if semi_summa > max_n:
+			return 1
+		summa += semi_summa
+	
+	return summa
 
 
-def mutually_exclusive_roles(population, i, j):
-	population_x = []
-
-	for individual in population:
-		#control of chromosome X
-		tmp = list(individual[0])
-
-		if tmp[i] == '1' and tmp[j] == '1':
-			#print "found: "+individual[0]+"\n"
-			pass
-		else:
-			individual[0] = ''.join(tmp)
-			population_x.append(individual)
-
-	return population_x
+#maximum number of users to which a role can have (e.g. 30, role_position as the role of CEO)
+def cardinality_constraint_of_user(individual, role_position, max_n):
+	summa = 0
+	for gene in individual[0]:
+		if gene[role_position] == '1':
+			summa += 1
+	if summa > max_n:
+		return 1
+	
+	return summa
 
 
-def mutually_exclusive_permissions(population, i, j):
-	population_x = []
-
-	for individual in population:
-		#control of chromosome X
-		tmp = list(individual[1])
-
-		if tmp[i] == '1' and tmp[j] == '1':
-			#print "found: "+individual[1]+"\n"
-			pass
-		else:
-			individual[1] = ''.join(tmp)
-			population_x.append(individual)
-
-	return population_x	
+#maximum number of permissions to which a role can have (e.g. 30, role_position as the role of CEO)
+def cardinality_constraint_of_permission_role(individual, role_position, max_n):
+	summa = 0
+	for gene in individual[1]:
+		if gene[role_position] == '1':
+			summa += 1
+	if summa > max_n:
+		return 1
+	
+	return summa
 
 
-#def anti-association_rule_between_permissions(population)
-#def anti-association_rule_between_roles(population)
+#one individual cannot be a member of both mutually exclusion roles (e.g. 7, 10)
+def mutually_exclusive_roles(individual, role_position_1, role_position_2):
+	summa = 0
+	for gene in individual[0]:
+		if gene[role_position] == '1' and gene[role_position_2] == '1':
+			summa += 1
+	if summa > max_n:
+		return 1
+	
+	return summa
+
+
+
+#the mutually exclusive permissions cannot be assigned to the same role (e.g. 8, 20)
+def mutually_exclusive_permissions(individual, permission_position_1, permission_role_position_2):
+	summa = 0
+	for gene in individual[1]:
+		if gene[role_position] == '1' and gene[role_position_2] == '1':
+			summa += 1
+	if summa > max_n:
+		return 1
+	
+	return summa

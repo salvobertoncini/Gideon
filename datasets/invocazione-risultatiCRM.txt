@@ -1,0 +1,60 @@
+
+-->testRealDataset('fire2.txt',325,590,589)
+k= 1) |roles|=325 - |roles|=325 
+k=590) |roles|=10 - |roles|=10 
+ 
+-->testRealDataset('fire1.txt',365,709,708)
+k= 1) |roles|=363 - |roles|=363 
+k=709) |roles|=71 - |roles|=71 
+
+-->testRealDataset('domino.txt',79,231,20)
+k= 1) |roles|=35 - |roles|=35 
+k=21) |roles|=20 - |roles|=20 
+k=41) |roles|=20 - |roles|=20 
+k=61) |roles|=20 - |roles|=20 
+k=81) |roles|=20 - |roles|=20 
+k=101) |roles|=20 - |roles|=20 
+k=121) |roles|=20 - |roles|=20 
+k=141) |roles|=20 - |roles|=20 
+k=161) |roles|=20 - |roles|=20 
+k=181) |roles|=20 - |roles|=20 
+k=201) |roles|=20 - |roles|=20 
+k=221) |roles|=20 - |roles|=20 
+
+-->testRealDataset('hc.txt',46,46,5)
+k= 1) |roles|=46 - |roles|=46 
+k= 6) |roles|=46 - |roles|=46 
+k=11) |roles|=46 - |roles|=46 
+k=16) |roles|=46 - |roles|=46 
+k=21) |roles|=41 - |roles|=41 
+k=26) |roles|=34 - |roles|=34 
+k=31) |roles|=34 - |roles|=34 
+k=36) |roles|=32 - |roles|=32 
+k=41) |roles|=32 - |roles|=32 
+k=46) |roles|=16 - |roles|=16 
+
+->testRealDataset('emea.txt',35,3046,500)
+k= 1) |roles|=35 - |roles|=35 
+k=501) |roles|=34 - |roles|=34 
+k=1001) |roles|=34 - |roles|=34 
+k=1501) |roles|=34 - |roles|=34 
+k=2001) |roles|=34 - |roles|=34 
+k=2501) |roles|=34 - |roles|=34 
+k=3001) |roles|=34 - |roles|=34 
+
+-->testRealDataset('domino.txt',79,231,20)
+k= 1) |roles|=35 - |roles|=35 
+k=21) |roles|=20 - |roles|=20 
+k=41) |roles|=20 - |roles|=20 
+k=61) |roles|=20 - |roles|=20 
+k=81) |roles|=20 - |roles|=20 
+k=101) |roles|=20 - |roles|=20 
+k=121) |roles|=20 - |roles|=20 
+k=141) |roles|=20 - |roles|=20 
+k=161) |roles|=20 - |roles|=20 
+k=181) |roles|=20 - |roles|=20 
+k=201) |roles|=20 - |roles|=20 
+k=221) |roles|=20 - |roles|=20 
+
+-->testRealDataset('americas_small.txt',3477,1587,1587)
+k=1587) |roles|=225 - |roles|=225 
